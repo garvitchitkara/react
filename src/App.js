@@ -1,25 +1,68 @@
-import logo from './logo.svg';
+
 import './App.css';
+import Navbar from './MyComponent/Navbar';
+import Textarea from './MyComponent/Textarea';
+import About from './MyComponent/About';
+import React, { useState } from "react"
+import Alert from './MyComponent/Alert';
+
+import {
+  BrowserRouter as Router,
+  Switch, 
+  Route,
+  Link
+} from "react-router-dom";
 
 function App() {
+  const [mode, setmode] = useState("light");
+
+  const [alert, setalert] = useState(null);
+
+  const showAlert = (message, type) => {
+    setalert({
+      msg: message,
+      type: type
+    })
+  }
+
+  const togglemode = () => {
+    if (mode === "light") {
+      setmode("dark")
+      document.body.style.background = "#042743";
+      showAlert("sucess");
+      document.title = "textutil-dark mode";
+    }
+    else {
+      setmode("light")
+      document.body.style.background = "white";
+      showAlert("sucess");
+      document.title = "textutil-light mode";
+
+    }
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <Router>
+      <Navbar title="textutils" abouttext="about us" mode={mode} togglemode={togglemode} />
+      <Alert alert={alert} />
+      
+
+        <div className="container">
+          <Switch>
+            <Route path="/about">
+              <About />
+            </Route>
+
+            <Route path="/">
+              <Textarea showAlert={showAlert} heading="Enter the text to analyse" mode={mode} />
+            </Route> 
+          </Switch>
+
+        </div>
+      </Router>
+     
+      </>
   );
 }
 
-export default App;
+export default App
